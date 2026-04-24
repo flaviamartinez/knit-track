@@ -51,9 +51,10 @@ export function EditProjectDialog({ project, onSave }: EditProjectDialogProps) {
         variant="ghost"
         size="sm"
         onClick={(e) => { e.stopPropagation(); setOpen(true); }}
-        className="rounded-full text-muted-foreground hover:bg-black/5 px-3 h-9"
+        className="rounded-full text-muted-foreground hover:bg-black/5 px-2 md:px-3 h-9"
       >
-        <Edit2 className="w-4 h-4 mr-1" /> Edit
+        <Edit2 className="w-4 h-4 md:mr-1" />
+        <span className="hidden md:inline">Edit</span>
       </Button>
       <ShadDialogContent className="sm:max-w-[480px] rounded-[2rem] border-2 border-accent p-8 shadow-2xl bg-white text-foreground">
         <ShadDialogHeader className="mb-4 text-left">

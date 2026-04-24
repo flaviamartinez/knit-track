@@ -10,6 +10,11 @@ export interface Section {
     frequency: number;
     amount: number;
   };
+  // Subsection mode: divides totalRows into N equal blocks, each ending with a shaping event
+  subsections?: {
+    count: number;    // total number of subsections (e.g. 22)
+    rowsEach: number; // rows per subsection (e.g. 8)
+  };
 }
 
 export interface Project {

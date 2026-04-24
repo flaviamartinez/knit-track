@@ -98,8 +98,10 @@ export default function App() {
         s.id === activeSection.id ? { ...s, currentRow: newRow } : s
       );
       
-      // Optimistic update
+      // Optimistic updates — both must fire before the await so the UI
+      // never waits on the network round-trip to Supabase.
       setActiveSection(prev => prev ? { ...prev, currentRow: newRow } : null);
+      setSelectedProject(prev => prev ? { ...prev, sections: updatedSections } : null);
       
       await projectService.updateProject(selectedProject.id, { sections: updatedSections });
     }
@@ -191,7 +193,7 @@ export default function App() {
               <ChevronLeft className="w-6 h-6" />
             </Button>
           )}
-          <h1 className="text-xl md:text-3xl font-serif font-bold text-primary flex items-center gap-2">
+          <h1 className="text-xl md:text-3xl font-serif font-bold text-primary flex items-center gap-2 truncate max-w-[130px] sm:max-w-xs md:max-w-none">
             {quickCounterOpen 
               ? "Quick Counter" 
               : activeSection 
@@ -201,10 +203,11 @@ export default function App() {
                   : "My Projects"}
           </h1>
           {selectedProject && !activeSection && !quickCounterOpen && (
-            <div className="flex items-center gap-1">
+            <div className="flex items-center gap-0.5 md:gap-1">
               {selectedProject.patternUrl && (
-                <Button variant="ghost" size="sm" onClick={() => window.open(selectedProject.patternUrl, '_blank')} className="text-muted-foreground hover:bg-black/5 rounded-full px-3 h-9 hidden md:flex">
-                  <FileText className="w-4 h-4 mr-1" /> Pattern
+                <Button variant="ghost" size="sm" onClick={() => window.open(selectedProject.patternUrl, '_blank')} className="text-muted-foreground hover:bg-black/5 rounded-full px-2 md:px-3 h-9 flex">
+                  <FileText className="w-4 h-4 md:mr-1" />
+                  <span className="hidden md:inline">Pattern</span>
                 </Button>
               )}
 
@@ -221,9 +224,11 @@ export default function App() {
                 }}
               />
               
-              <Button onClick={handleFinishProject} variant="ghost" size="sm" className={`rounded-full px-3 h-9 transition-all ${selectedProject.status === 'finished' ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-muted-foreground hover:bg-black/5'}`}>
-                 {selectedProject.status === 'finished' ? <CheckCircle2 className="w-4 h-4 mr-1" /> : <CheckCircle2 className="w-4 h-4 mr-1 opacity-50" />}
-                 {selectedProject.status === 'finished' ? 'Finished!' : 'Finish'}
+              <Button onClick={handleFinishProject} variant="ghost" size="sm" className={`rounded-full px-2 md:px-3 h-9 transition-all ${selectedProject.status === 'finished' ? 'text-green-600 bg-green-50 hover:bg-green-100' : 'text-muted-foreground hover:bg-black/5'}`}>
+                 {selectedProject.status === 'finished' 
+                   ? <CheckCircle2 className="w-4 h-4 md:mr-1" /> 
+                   : <CheckCircle2 className="w-4 h-4 md:mr-1 opacity-50" />}
+                 <span className="hidden md:inline">{selectedProject.status === 'finished' ? 'Finished!' : 'Finish'}</span>
               </Button>
 
               <ConfirmDialog
@@ -232,8 +237,9 @@ export default function App() {
                 confirmLabel="Restart"
                 onConfirm={handleRestartProject}
               >
-                <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground hover:bg-orange-50 hover:text-orange-600 px-3 h-9">
-                  <RotateCcw className="w-4 h-4 mr-1" /> Restart
+                <Button variant="ghost" size="sm" className="rounded-full text-muted-foreground hover:bg-orange-50 hover:text-orange-600 px-2 md:px-3 h-9">
+                  <RotateCcw className="w-4 h-4 md:mr-1" />
+                  <span className="hidden md:inline">Restart</span>
                 </Button>
               </ConfirmDialog>
             </div>

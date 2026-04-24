@@ -109,9 +109,9 @@ export default function App() {
 
   const handleFinishProject = async () => {
     if (selectedProject) {
-      await projectService.updateProject(selectedProject.id, { status: 'finished' });
-      setSelectedProject(null);
-      setActiveSection(null);
+      const newStatus = selectedProject.status === 'finished' ? 'active' : 'finished';
+      setSelectedProject(prev => prev ? { ...prev, status: newStatus } : null);
+      await projectService.updateProject(selectedProject.id, { status: newStatus });
     }
   };
 
